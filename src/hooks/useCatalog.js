@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { DEFAULT_CATEGORIES, DEFAULT_PRODUCTS, enrichProductsWithCategories } from '../lib/catalogData';
+
+const FALLBACK_PRODUCTS = enrichProductsWithCategories(DEFAULT_PRODUCTS, DEFAULT_CATEGORIES);
 
 export function useCatalog() {
   const [categories, setCategories] = useState([]);
@@ -12,46 +15,49 @@ export function useCatalog() {
   const [error, setError] = useState(null);
 
   const fetchCatalog = useCallback(async () => {
-    if (!isSupabaseConfigured || !supabase) {
-      setLoading(false);
-      setError('Database credentials not configured in .env');
-      return;
+    setLoading(true);
+    setError(null);
+
+    // 1. If Supabase is configured, fetch live tables
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data: catData, error: catErr } = await supabase
+          .from('categories')
+          .select('*')
+          .order('name');
+
+        if (catErr) throw catErr;
+
+        const { data: prodData, error: prodErr } = await supabase
+          .from('products')
+          .select(`
+            *,
+            categories (id, slug, name, spec_defs),
+            store_prices (*),
+            price_history (*)
+          `)
+          .order('created_at', { ascending: false });
+
+        if (prodErr) throw prodErr;
+
+        if (catData && catData.length > 0 && prodData && prodData.length > 0) {
+          setCategories(catData);
+          setProducts(prodData);
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.warn('Supabase query failed, falling back to local benchmark catalog:', err);
+        setError(err.message || 'Connecting to Supabase...');
+      }
+    } else {
+      setError('Cloud database credentials not configured');
     }
 
-    try {
-      setLoading(true);
-      setError(null);
-
-      // 1. Fetch categories directly from Supabase
-      const { data: catData, error: catErr } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name');
-
-      if (catErr) throw catErr;
-
-      // 2. Fetch products directly from Supabase with relational store prices & history
-      const { data: prodData, error: prodErr } = await supabase
-        .from('products')
-        .select(`
-          *,
-          categories (id, slug, name, spec_defs),
-          store_prices (*),
-          price_history (*)
-        `)
-        .order('created_at', { ascending: false });
-
-      if (prodErr) throw prodErr;
-
-      setCategories(catData || []);
-      setProducts(prodData || []);
-    } catch (err) {
-      setError(err.message || 'Failed to query Supabase tables');
-      setCategories([]);
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
+    // 2. Resilient fallback to curated benchmark catalog
+    setCategories(DEFAULT_CATEGORIES);
+    setProducts(FALLBACK_PRODUCTS);
+    setLoading(false);
   }, []);
 
   useEffect(() => {

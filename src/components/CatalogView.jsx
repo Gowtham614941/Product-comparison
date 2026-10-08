@@ -2,6 +2,7 @@ import React from 'react';
 import { Search, RotateCcw, ArrowUpDown, Database, RefreshCw } from 'lucide-react';
 import ProductCard from './ProductCard';
 import Hero from './Hero';
+import { supabaseUrl, isSupabaseConfigured } from '../lib/supabase';
 import './CatalogView.css';
 
 export default function CatalogView({
@@ -139,11 +140,21 @@ export default function CatalogView({
             <div className="empty-icon-wrap" style={{ background: 'rgba(79, 70, 229, 0.1)', color: '#818cf8' }}>
               <Database size={26} />
             </div>
-            <h3 className="empty-title">Awaiting Data in Supabase</h3>
+            <h3 className="empty-title">
+              {isSupabaseConfigured ? 'Awaiting Data in Supabase' : 'Supabase Credentials Pending'}
+            </h3>
             <p className="empty-description">
-              Connected to Supabase (<code>xmjdngjnwwxvjniquhhj.supabase.co</code>).
-              {error ? ` Current query status: ${error}. ` : ' No products found in the database yet. '}
-              Execute the provided SQL query in your Supabase SQL Editor to populate the categories and products.
+              {isSupabaseConfigured ? (
+                <>
+                  Connected to Supabase (<code>{(() => { try { return new URL(supabaseUrl).host; } catch { return supabaseUrl; } })()}</code>).
+                  {error ? ` Current status: ${error}. ` : ' No products found in the database yet. '}
+                  Execute the provided SQL query in your Supabase SQL Editor to populate the categories and products.
+                </>
+              ) : (
+                <>
+                  Supabase environment variables are missing. Configure <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> in your environment settings and redeploy.
+                </>
+              )}
             </p>
             <button
               onClick={onRefresh}
