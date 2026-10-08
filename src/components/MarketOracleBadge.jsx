@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, Clock, CheckCircle2, HelpCircle } from 'lucide-react';
 import { evaluateMarketTiming } from '../lib/scoring';
 import { formatCurrency } from '../lib/comparisonUtils';
+import './MarketOracleBadge.css';
 
 export default function MarketOracleBadge({ currentPrice, priceHistory = [] }) {
   const [showTooltip, setShowTooltip] = useState(false);

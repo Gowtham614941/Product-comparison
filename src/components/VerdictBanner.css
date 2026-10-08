@@ -1,0 +1,59 @@
+/* ==============================================================================
+   Verdict Banners
+   ============================================================================== */
+.verdict-banner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.verdict-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: var(--transition);
+}
+
+.verdict-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.verdict-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.best-specs .verdict-icon-box { background: rgba(79, 70, 229, 0.15); color: #818cf8; }
+.best-value .verdict-icon-box { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.lowest-price .verdict-icon-box { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+
+.verdict-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+.verdict-product-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.verdict-detail {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}

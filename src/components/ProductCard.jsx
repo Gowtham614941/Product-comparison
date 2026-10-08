@@ -2,6 +2,7 @@ import React from 'react';
 import { Star, Check, Plus, Layers } from 'lucide-react';
 import ProductImage from './ProductImage';
 import { formatCurrency, formatSpecValue } from '../lib/comparisonUtils';
+import './ProductCard.css';
 
 export default function ProductCard({
   product,

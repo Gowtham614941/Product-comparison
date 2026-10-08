@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Package } from 'lucide-react';
+import './ProductImage.css';
 
 export default function ProductImage({ src, alt, className = '' }) {
   const [hasError, setHasError] = useState(false);

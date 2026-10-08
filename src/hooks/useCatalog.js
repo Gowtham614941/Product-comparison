@@ -1,36 +1,36 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { DEFAULT_CATEGORIES, DEFAULT_PRODUCTS, enrichProductsWithCategories } from '../lib/catalogData';
 
 export function useCatalog() {
-  const initialEnriched = enrichProductsWithCategories(DEFAULT_PRODUCTS, DEFAULT_CATEGORIES);
-
-  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
-  const [products, setProducts] = useState(initialEnriched);
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
   const [selectedCategorySlug, setSelectedCategorySlug] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   const [maxPrice, setMaxPrice] = useState(5000);
-  const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState('benchmark'); // 'cloud' | 'benchmark'
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchCatalog = useCallback(async () => {
     if (!isSupabaseConfigured || !supabase) {
-      setProducts(initialEnriched);
-      setCategories(DEFAULT_CATEGORIES);
+      setLoading(false);
+      setError('Database credentials not configured in .env');
       return;
     }
 
     try {
       setLoading(true);
+      setError(null);
 
-      // Attempt to load categories from Supabase
+      // 1. Fetch categories directly from Supabase
       const { data: catData, error: catErr } = await supabase
         .from('categories')
         .select('*')
         .order('name');
 
-      // Attempt to load products from Supabase
+      if (catErr) throw catErr;
+
+      // 2. Fetch products directly from Supabase with relational store prices & history
       const { data: prodData, error: prodErr } = await supabase
         .from('products')
         .select(`
@@ -41,21 +41,14 @@ export function useCatalog() {
         `)
         .order('created_at', { ascending: false });
 
-      if (!catErr && !prodErr && prodData && prodData.length > 0) {
-        setCategories(catData && catData.length > 0 ? catData : DEFAULT_CATEGORIES);
-        setProducts(prodData);
-        setDataSource('cloud');
-      } else {
-        // Fallback to rich benchmark catalog if database is not seeded yet
-        setCategories(DEFAULT_CATEGORIES);
-        setProducts(initialEnriched);
-        setDataSource('benchmark');
-      }
-    } catch {
-      // Graceful fallback to verified benchmark data
-      setCategories(DEFAULT_CATEGORIES);
-      setProducts(initialEnriched);
-      setDataSource('benchmark');
+      if (prodErr) throw prodErr;
+
+      setCategories(catData || []);
+      setProducts(prodData || []);
+    } catch (err) {
+      setError(err.message || 'Failed to query Supabase tables');
+      setCategories([]);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -129,8 +122,8 @@ export function useCatalog() {
     maxPrice,
     setMaxPrice,
     loading,
+    error,
     refreshCatalog: fetchCatalog,
-    isConfigured: isSupabaseConfigured,
-    dataSource
+    isConfigured: isSupabaseConfigured
   };
 }

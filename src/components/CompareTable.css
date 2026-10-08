@@ -1,0 +1,88 @@
+/* ==============================================================================
+   Comparison Table
+   ============================================================================== */
+.matrix-wrapper {
+  overflow-x: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.matrix-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.85rem;
+}
+
+.matrix-table thead th {
+  position: sticky;
+  top: 70px;
+  background: rgba(15, 22, 38, 0.97);
+  backdrop-filter: blur(12px);
+  z-index: 20;
+  padding: 18px 16px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+  vertical-align: top;
+}
+
+.matrix-table th.col-spec-title {
+  position: sticky;
+  left: 0;
+  z-index: 30;
+  width: 210px;
+  min-width: 190px;
+  background: rgba(15, 22, 38, 0.99);
+  border-right: 1px solid var(--bg-card-border);
+}
+
+.matrix-table td.col-spec-title {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background: rgba(15, 22, 38, 0.99);
+  border-right: 1px solid var(--bg-card-border);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.matrix-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  vertical-align: middle;
+}
+
+.cell-winner {
+  background: rgba(16, 185, 129, 0.08) !important;
+  color: #6ee7b7 !important;
+  font-weight: 700;
+  position: relative;
+}
+
+.cell-winner::after {
+  content: '★ BEST';
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+  font-weight: 800;
+  color: var(--emerald);
+  background: rgba(16, 185, 129, 0.15);
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+}
+
+.spec-group-row td {
+  background: rgba(79, 70, 229, 0.08);
+  color: #c7d2fe;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 9px 16px;
+  border-top: 1px solid rgba(79, 70, 229, 0.15);
+  border-bottom: 1px solid rgba(79, 70, 229, 0.15);
+}

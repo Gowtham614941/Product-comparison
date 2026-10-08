@@ -1,13 +1,18 @@
 import React from 'react';
-import { Layers, Bell, ArrowLeftRight, Sparkles } from 'lucide-react';
+import { Layers, Bell, ArrowLeftRight, LogOut, User } from 'lucide-react';
+import './Navbar.css';
 
 export default function Navbar({
   viewMode,
   setViewMode,
   selectedCount = 0,
   alertsCount = 0,
-  onOpenAlerts
+  onOpenAlerts,
+  user,
+  onSignOut
 }) {
+  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
+
   return (
     <header className="navbar">
       <div className="container navbar-inner">
@@ -53,7 +58,7 @@ export default function Navbar({
           </button>
         </nav>
 
-        {/* Action Controls (No Supabase pill, No Sign In / Sign Up) */}
+        {/* Action Controls */}
         <div className="nav-actions">
           {/* Price Drop Alerts Drawer Trigger */}
           <button
@@ -61,8 +66,8 @@ export default function Navbar({
             className="nav-alerts-btn"
             title="View saved price drop alerts"
           >
-            <Bell size={15} />
-            <span className="alerts-btn-label">Price Alerts</span>
+            <Bell size={14} />
+            <span className="alerts-btn-label">Alerts</span>
             {alertsCount > 0 && (
               <span className="alerts-active-dot">
                 {alertsCount}
@@ -78,8 +83,28 @@ export default function Navbar({
               style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
             >
               <span>Compare ({selectedCount})</span>
-              <ArrowLeftRight size={14} />
+              <ArrowLeftRight size={13} />
             </button>
+          )}
+
+          {/* User Profile & Sign Out */}
+          {user && (
+            <div className="nav-user-cluster">
+              <div className="nav-user-pill" title={`Signed in as ${user.email}`}>
+                <div className="user-avatar-dot">
+                  <User size={12} />
+                </div>
+                <span className="user-email-text">{displayName}</span>
+              </div>
+              <button
+                onClick={onSignOut}
+                className="btn-signout"
+                title="Sign out and return to Introduction page"
+              >
+                <LogOut size={14} />
+                <span className="signout-label">Sign Out</span>
+              </button>
+            </div>
           )}
         </div>
       </div>

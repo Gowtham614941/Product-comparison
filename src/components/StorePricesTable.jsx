@@ -1,6 +1,7 @@
 import React from 'react';
 import { ExternalLink, ShoppingBag } from 'lucide-react';
 import { formatCurrency } from '../lib/comparisonUtils';
+import './StorePricesTable.css';
 
 export default function StorePricesTable({ storePrices = [] }) {
   if (!storePrices || storePrices.length === 0) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Trash2, Bell, ExternalLink, ArrowRight } from 'lucide-react';
 import { formatCurrency } from '../lib/comparisonUtils';
+import './UserAlertsDrawer.css';
 
 export default function UserAlertsDrawer({
   isOpen,

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Award, Zap, DollarSign, Info, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { formatCurrency } from '../lib/comparisonUtils';
+import './VerdictBanner.css';
 
 export default function VerdictBanner({ verdicts, scores }) {
   const [showMethodology, setShowMethodology] = useState(false);

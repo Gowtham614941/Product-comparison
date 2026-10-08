@@ -1,5 +1,6 @@
 import React from 'react';
 import { CheckCircle2, Info, X } from 'lucide-react';
+import './ToastContainer.css';
 
 export default function ToastContainer({ toasts = [], onDismiss }) {
   if (toasts.length === 0) return null;

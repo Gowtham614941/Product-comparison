@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TrendingDown, TrendingUp, Minus } from 'lucide-react';
 import { formatCurrency } from '../lib/comparisonUtils';
+import './Sparkline.css';
 
 export default function Sparkline({ priceHistory = [], width = 180, height = 50 }) {
   const [hoverIndex, setHoverIndex] = useState(null);

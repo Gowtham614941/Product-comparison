@@ -1,7 +1,8 @@
 import React from 'react';
-import { Search, SlidersHorizontal, RotateCcw, ArrowUpDown } from 'lucide-react';
+import { Search, RotateCcw, ArrowUpDown, Database, RefreshCw } from 'lucide-react';
 import ProductCard from './ProductCard';
 import Hero from './Hero';
+import './CatalogView.css';
 
 export default function CatalogView({
   categories = [],
@@ -18,7 +19,9 @@ export default function CatalogView({
   loading = false,
   selectedProductIds = [],
   onToggleCompare,
-  onSelectPreset
+  onSelectPreset,
+  onRefresh,
+  error = null
 }) {
   const currentCategory = categories.find(c => c.slug === selectedCategorySlug);
   const specDefs = currentCategory?.spec_defs || [];
@@ -32,7 +35,7 @@ export default function CatalogView({
 
   return (
     <div className="catalog-wrapper">
-      {/* 1. Human-Crafted Hero Section */}
+      {/* 1. Hero Section */}
       <Hero
         categories={categories}
         selectedCategorySlug={selectedCategorySlug}
@@ -130,16 +133,37 @@ export default function CatalogView({
               );
             })}
           </div>
+        ) : allProducts.length === 0 ? (
+          /* Empty Supabase Database State */
+          <div className="empty-catalog-state">
+            <div className="empty-icon-wrap" style={{ background: 'rgba(79, 70, 229, 0.1)', color: '#818cf8' }}>
+              <Database size={26} />
+            </div>
+            <h3 className="empty-title">Awaiting Data in Supabase</h3>
+            <p className="empty-description">
+              Connected to Supabase (<code>xmjdngjnwwxvjniquhhj.supabase.co</code>).
+              {error ? ` Current query status: ${error}. ` : ' No products found in the database yet. '}
+              Execute the provided SQL query in your Supabase SQL Editor to populate the categories and products.
+            </p>
+            <button
+              onClick={onRefresh}
+              className="btn btn-primary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+            >
+              <RefreshCw size={14} />
+              <span>Refresh from Supabase</span>
+            </button>
+          </div>
         ) : (
-          /* Human Filter Empty State */
+          /* Filter Mismatch State */
           <div className="empty-catalog-state">
             <div className="empty-icon-wrap">
-              <Search size={28} />
+              <Search size={26} />
             </div>
             <h3 className="empty-title">No matching products found</h3>
             <p className="empty-description">
-              We couldn't find any devices matching your current search query or price ceiling.
-              Try broadening your criteria or reset filters to browse the full catalog.
+              No devices match your current keyword or price ceiling.
+              Try broadening your criteria or reset filters to browse all {allProducts.length} devices.
             </p>
             <button
               onClick={handleResetFilters}

@@ -5,6 +5,7 @@ import Sparkline from './Sparkline';
 import MarketOracleBadge from './MarketOracleBadge';
 import StorePricesTable from './StorePricesTable';
 import { formatCurrency, formatSpecValue, isSpecIdentical } from '../lib/comparisonUtils';
+import './CompareTable.css';
 
 export default function CompareTable({
   products = [],

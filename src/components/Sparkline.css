@@ -1,0 +1,11 @@
+/* ==============================================================================
+   Sparkline Trend Chart
+   ============================================================================== */
+.sparkline-container {
+  display: inline-block;
+  position: relative;
+}
+
+.sparkline-svg {
+  overflow: visible;
+}

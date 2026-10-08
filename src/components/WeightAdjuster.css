@@ -1,0 +1,39 @@
+/* ==============================================================================
+   Spec Weights Adjuster
+   ============================================================================== */
+.weights-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.weights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.weight-item {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+
+.weight-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.weight-slider {
+  width: 100%;
+  accent-color: var(--primary);
+  cursor: pointer;
+}

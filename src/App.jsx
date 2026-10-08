@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Navbar from './components/Navbar';
+import IntroPage from './components/IntroPage';
 import CatalogView from './components/CatalogView';
 import ComparisonMatrix from './components/ComparisonMatrix';
 import FloatingDock from './components/FloatingDock';
@@ -26,12 +27,21 @@ export default function App() {
     setMaxPrice,
     loading: catalogLoading,
     refreshCatalog,
+    error: catalogError,
     isConfigured
   } = useCatalog();
 
   const {
+    user,
+    isAuthenticated,
+    loading: authLoading,
     alerts,
     alertsLoading,
+    signInWithPassword,
+    signUp,
+    loginAsGuest,
+    loginAsDirectUser,
+    signOut,
     createAlert,
     deleteAlert
   } = useAuth();
@@ -75,8 +85,10 @@ export default function App() {
 
   // 2. Synchronize State changes back to Address Bar
   useEffect(() => {
-    syncStateToUrl(selectedProductIds, weights);
-  }, [selectedProductIds, weights]);
+    if (isAuthenticated) {
+      syncStateToUrl(selectedProductIds, weights);
+    }
+  }, [selectedProductIds, weights, isAuthenticated]);
 
   // Derive Selected Products Array
   const selectedProducts = useMemo(() => {
@@ -92,7 +104,6 @@ export default function App() {
         return prev.filter(id => id !== product.id);
       }
 
-      // Check Category Consistency
       if (prev.length > 0) {
         const firstProd = allProducts.find(p => p.id === prev[0]);
         if (firstProd && product.category_id && firstProd.category_id !== product.category_id) {
@@ -100,7 +111,6 @@ export default function App() {
         }
       }
 
-      // Capacity Enforcement: Max 4
       if (prev.length >= 4) {
         showToast('Maximum 4 products allowed for side-by-side comparison.');
         return prev;
@@ -144,6 +154,61 @@ export default function App() {
     showToast('All specification weights reset to default');
   }, [showToast]);
 
+  // Auth Handlers for Intro Page
+  const handleLogin = async (email, password) => {
+    const res = await signInWithPassword(email, password);
+    if (!res.error) {
+      showToast(`Welcome back, ${email.split('@')[0]}!`);
+    }
+    return res;
+  };
+
+  const handleSignUp = async (email, password, fullName) => {
+    const res = await signUp(email, password, fullName);
+    if (!res.error) {
+      if (res.rateLimitBypassed) {
+        showToast(`Welcome to OmniSpec, ${fullName || email.split('@')[0]}! (Bypassed email rate limit)`);
+      } else {
+        showToast('Account registered successfully. Welcome to OmniSpec!');
+      }
+    }
+    return res;
+  };
+
+  const handleGuestAccess = () => {
+    loginAsGuest();
+    showToast('Welcome to the OmniSpec interactive preview!');
+  };
+
+  const handleBypassAsUser = (email, fullName) => {
+    loginAsDirectUser(email, fullName);
+    showToast(`Welcome to OmniSpec, ${fullName || email.split('@')[0]}!`);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setSelectedProductIds([]);
+    setViewMode('catalog');
+    showToast('Signed out. Returned to introduction page.');
+  };
+
+  // If user is not authenticated, render Introduction & Auth Page first!
+  if (!isAuthenticated) {
+    return (
+      <div className="app-shell">
+        <IntroPage
+          onLogin={handleLogin}
+          onSignUp={handleSignUp}
+          onGuestAccess={handleGuestAccess}
+          onBypassAsUser={handleBypassAsUser}
+          authLoading={authLoading}
+        />
+        <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+      </div>
+    );
+  }
+
+  // Once authenticated (or entered as guest), render Main Project Workspace
   return (
     <div className="app-shell">
       {/* Top Application Navigation */}
@@ -153,6 +218,8 @@ export default function App() {
         selectedCount={selectedProductIds.length}
         alertsCount={alerts.length}
         onOpenAlerts={() => setIsAlertsDrawerOpen(true)}
+        user={user}
+        onSignOut={handleSignOut}
       />
 
       {/* Main Content Area */}
@@ -165,7 +232,6 @@ export default function App() {
             selectedCategorySlug={selectedCategorySlug}
             onSelectCategory={(slug) => {
               setSelectedCategorySlug(slug);
-              // scroll gently to catalog explorer
               const el = document.getElementById('catalog-explorer');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}
@@ -179,6 +245,8 @@ export default function App() {
             selectedProductIds={selectedProductIds}
             onToggleCompare={handleToggleCompare}
             onSelectPreset={handleSelectPreset}
+            onRefresh={refreshCatalog}
+            error={catalogError}
           />
         ) : (
           <ComparisonMatrix
@@ -207,7 +275,7 @@ export default function App() {
         isComparing={viewMode === 'compare'}
       />
 
-      {/* Price Alert Modal (No Sign-In requirement) */}
+      {/* Price Alert Modal */}
       {activeAlertProduct && (
         <PriceAlertModal
           product={activeAlertProduct}

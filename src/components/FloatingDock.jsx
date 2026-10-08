@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, X, Trash2 } from 'lucide-react';
 import ProductImage from './ProductImage';
+import './FloatingDock.css';
 
 export default function FloatingDock({
   selectedProducts = [],

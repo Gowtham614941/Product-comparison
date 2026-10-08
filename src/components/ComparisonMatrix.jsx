@@ -6,6 +6,7 @@ import CompareTable from './CompareTable';
 import { calculateComparisonScores } from '../lib/scoring';
 import { generateShareUrl } from '../lib/urlState';
 import { exportComparisonToCsv } from '../lib/comparisonUtils';
+import './ComparisonMatrix.css';
 
 export default function ComparisonMatrix({
   products = [],

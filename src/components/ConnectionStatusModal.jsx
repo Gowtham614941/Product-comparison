@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Database, CheckCircle2, AlertTriangle, Copy, Check, ExternalLink, X, RefreshCw } from 'lucide-react';
 import { checkSupabaseHealth, isSupabaseConfigured } from '../lib/supabase';
+import './ConnectionStatusModal.css';
 
 export default function ConnectionStatusModal({ isOpen, onClose, onToast }) {
   const [health, setHealth] = useState(null);

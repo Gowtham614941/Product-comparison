@@ -1,0 +1,76 @@
+/* ==============================================================================
+   User Alerts Drawer
+   ============================================================================== */
+/* Drawer styles */
+.drawer-modal-content {
+  max-width: 500px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer-loading-box, .drawer-empty-box {
+  padding: 36px 12px;
+  text-align: center;
+}
+
+.drawer-alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 420px;
+  margin-top: 8px;
+}
+
+.drawer-alert-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawer-alert-brand {
+  font-size: 0.68rem;
+  color: #818cf8;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.drawer-alert-title {
+  font-size: 0.925rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.drawer-alert-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.drawer-alert-email {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+.drawer-delete-btn {
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  color: #fda4af;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.drawer-delete-btn:hover {
+  background: rgba(244, 63, 94, 0.25);
+}

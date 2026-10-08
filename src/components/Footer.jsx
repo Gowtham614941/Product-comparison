@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Layers, ArrowUp, Mail, CheckCircle2, Shield, Heart } from 'lucide-react';
+import './Footer.css';
 
 export default function Footer({ onSelectCategory }) {
   const [email, setEmail] = useState('');

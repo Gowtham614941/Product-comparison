@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SlidersHorizontal, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react';
 import { WEIGHT_LEVELS } from '../lib/scoring';
+import './WeightAdjuster.css';
 
 const STEPS = [
   { val: 0.0, label: 'Ignore', color: '#64748b' },

@@ -13,6 +13,7 @@ import {
   Tablet,
   Search
 } from 'lucide-react';
+import './Hero.css';
 
 const CATEGORY_ICONS = {
   smartphones: Smartphone,

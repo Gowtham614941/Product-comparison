@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bell, X, Check, Mail, Sparkles, TrendingDown } from 'lucide-react';
 import { formatCurrency } from '../lib/comparisonUtils';
+import './PriceAlertModal.css';
 
 export default function PriceAlertModal({
   product,
