@@ -1,0 +1,23 @@
+[
+  {
+    "brand": "Apple",
+    "product_name": "iPhone 15 Pro",
+    "store": "Amazon",
+    "price": 999.00,
+    "url": "https://www.amazon.com"
+  },
+  {
+    "brand": "Apple",
+    "product_name": "iPhone 15 Pro",
+    "store": "Best Buy",
+    "price": 999.99,
+    "url": "https://www.bestbuy.com"
+  },
+  {
+    "brand": "Apple",
+    "product_name": "iPhone 15 Pro",
+    "store": "B&H Photo",
+    "price": 979.00,
+    "url": "https://www.bhphotovideo.com"
+  }
+]
